@@ -1,0 +1,100 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.1'
+	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+	id 'java'
+	id "idea"
+	//queryDSL 플러그인
+	id "com.ewerk.gradle.plugins.querydsl" version '1.0.10'
+}
+
+group = 'com.project'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'com.querydsl:querydsl-jpa:5.0.0'
+	implementation 'com.querydsl:querydsl-apt:5.0.0'
+
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.3'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	//implementation 'org.springframework.session:spring-session-data-redis'
+	//compileOnly 'io.lettuce:lettuce-core:6.1.8.RELEASE'
+
+	implementation 'com.vividsolutions:jts:1.13'
+	implementation 'org.hibernate:hibernate-spatial:5.2.5.Final'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+	//json simple
+	// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+}
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+
+
+
+def querydslDir = "$projectDir/src/main/generated"
+idea {
+	module {
+		sourceDirs += file(querydslDir)
+		generatedSourceDirs += file(querydslDir)
+		inheritOutputDirs = true
+	}
+}
+
+
+// querydsl 사용할 경로 지정합니다. 현재 지정한 부분은 .gitignore에 포함되므로 git에 올라가지 않습니다.
+
+
+// JPA 사용여부 및 사용 경로 설정
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir "$projectDir/src/main/generated"
+}
+
+// querydsl 컴파일 시 사용할 옵션 설정
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+// querydsl이 compileClassPath를 상속하도록 설정
+configurations {
+	/*
+	compileOnly {
+		extendsFrom annotationProcessor
+	}*/
+	querydsl.extendsFrom compileClasspath
+}

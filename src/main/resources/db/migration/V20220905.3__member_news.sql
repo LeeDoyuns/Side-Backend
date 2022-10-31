@@ -1,0 +1,121 @@
+drop table members;
+
+create table members (
+     id bigint not null auto_increment,
+     login_id varchar(100) unique not null,
+     nickname varchar(50) unique not null,
+     password varchar(500) not null,
+     user_type varchar(10) not null,
+     user_status varchar(10) not null,
+     input_id bigint not null,
+     create_date DATETIME default sysdate() not null,
+     update_id bigint not null,
+     update_date DATETIME default sysdate() not null,
+     primary key (id)
+);
+
+
+CREATE TABLE MEMBER_QUIT_HIST(
+         id bigint not null,
+         login_id varchar(100) unique not null,
+         nickname varchar(50) unique not null,
+         password varchar(500) not null,
+         user_type varchar(10) not null,
+         user_status varchar(10) not null,
+         input_id bigint not null,
+         create_date DATETIME default sysdate() not null,
+         update_id bigint not null,
+         update_date DATETIME default sysdate() not null,
+
+         CONSTRAINT  FK_MEMBER_ID
+        FOREIGN KEY (ID) REFERENCES MEMBERS(ID)
+);
+
+CREATE TABLE USER_SCRAP(
+  MEMBER_ID BIGINT NOT NULL,
+  NEWS_ID BIGINT NOT NULL,
+    INPUT_ID BIGINT NOT NULL,
+    CREATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+    UPDATE_ID BIGINT NOT NULL,
+    UPDATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+    PRIMARY KEY (MEMBER_ID, NEWS_ID)
+);
+
+CREATE TABLE USER_SUBSCRIBE_INFO(
+  MEMBER_ID BIGINT NOT NULL,
+  REPORTER_ID BIGINT NOT NULL,
+  INPUT_ID BIGINT NOT NULL,
+  CREATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+  UPDATE_ID BIGINT NOT NULL,
+  UPDATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+
+  PRIMARY KEY (MEMBER_ID, REPORTER_ID)
+);
+
+
+CREATE TABLE IMG_M(
+      ID BIGINT NOT NULL AUTO_INCREMENT,
+      ORIGIN_IMG_NM VARCHAR(100) NOT NULL,
+      IMG_NM VARCHAR(200) NOT NULL ,
+      IMG_PATH VARCHAR(400) NOT NULL,
+      INPUT_ID BIGINT NOT NULL,
+      CREATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+      UPDATE_ID BIGINT NOT NULL,
+      UPDATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+
+      PRIMARY KEY (ID)
+);
+
+-- 아래는 순서대로 INSERT 되어야 함.
+CREATE TABLE NEWS_CONTENTS (
+       ID BIGINT NOT NULL AUTO_INCREMENT,
+       CONTENTS MEDIUMTEXT,
+       INPUT_ID BIGINT NOT NULL,
+       CREATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+       UPDATE_ID BIGINT NOT NULL,
+       UPDATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+
+       PRIMARY KEY (ID)
+);
+
+
+
+CREATE TABLE NEWS_M(
+    ID BIGINT NOT NULL AUTO_INCREMENT,
+    TITLE VARCHAR(200) NOT NULL,
+    CONTENTS_ID BIGINT NOT NULL,
+    CATEGORY VARCHAR(20) NOT NULL,
+    POSTING_TIME DATETIME NOT NULL DEFAULT SYSDATE(),
+    NEWS_STATUS VARCHAR(10) NOT NULL,
+    HITS INTEGER NOT NULL DEFAULT 0,
+    INPUT_ID BIGINT NOT NULL,
+    CREATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+    UPDATE_ID BIGINT NOT NULL,
+    UPDATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE REPORTER_NEWS_REL(
+  REPORTER_ID BIGINT NOT NULL,
+  NEWS_ID BIGINT NOT NULL,
+  INPUT_ID BIGINT NOT NULL,
+  CREATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+  UPDATE_ID BIGINT NOT NULL,
+  UPDATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+
+  PRIMARY KEY (REPORTER_ID, NEWS_ID)
+);
+
+CREATE TABLE NEWS_IMG_REL(
+    NEWS_ID BIGINT NOT NULL,
+    IMG_ID BIGINT NOT NULL,
+    INPUT_ID BIGINT NOT NULL,
+    CREATE_DATE DATETIME NOT NULL DEFAULT SYSDATE(),
+    UPDATE_ID BIGINT NOT NULL,
+    UPDATE_DATE DATETIME NOT NULL DEFAULT SYSDATE()
+)
+
+
+
+
